@@ -1,0 +1,38 @@
+%Name -Sneha Balre
+%Reg no -25BCY10096
+% topic Write a prolog program to implement the Library Management Syste
+% m.
+
+%Facts: Books in the library (Title, Author, Status)
+book('The Hobbit', 'J.R.R. Tolkien', available).
+book('1984', 'George Orwell', available).
+book('To Kill a Mockingbird', 'Harper Lee', available).
+book('Pride and Prejudice', 'Jane Austen', available).
+
+% Facts: Library patrons (Name)
+patron('Alice').
+patron('Bob').
+patron('Charlie').
+
+%Facts: Borrowed books (Title, Patron)
+borrowed('The Hobbit', 'Alice').
+borrowed('1984', 'Bob').
+
+%Check if a book is available
+is_available(Book) : book(Book, _, available).
+
+% Borrow a book
+borrow(Book, Patron) :-
+    patron(Patron), is_available(Book),
+    retract(book(Book, Author, available)),
+    assert(book(Book, Author, borrowed)),
+    assert(borrowed(Book, Patron)),
+    write(Patron), write('borrowed'), write(Book), nl.
+
+% Return a book
+return(Book, Patron) :-
+    patron(Patron), borrowed(Book, Patron),
+    retract(borrowed(Book, Patron)),
+    retract(book(Book, Author, borrowed)),
+    assert(book(Book, Author, available)),
+    write(Patron), write(' returned'), write(Book), nl.
